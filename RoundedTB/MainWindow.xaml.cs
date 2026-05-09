@@ -151,7 +151,6 @@ namespace RoundedTB
                 Close();
                 return;
             }
-            TrayIconCheck(isForceReset:true);
 
             if (IsRunningAsUWP())
             {
@@ -943,20 +942,15 @@ namespace RoundedTB
 
         protected override void OnSourceInitialized(EventArgs e)
         {
-            Debug.WriteLine("AAAAA");
             base.OnSourceInitialized(e);
-
 
             IntPtr handle = new WindowInteropHelper(this).Handle;
             source = HwndSource.FromHwnd(handle);
             source.AddHook(interaction.HwndHook);
-            bool wtf = LocalPInvoke.RegisterHotKey(handle, 9000, 0x8, 0x71);
-            Debug.WriteLine("KEY: " + wtf);
-            Debug.WriteLine(handle);
-            Debug.WriteLine((int)Types.KeyModifier.WinKey);
-            Debug.WriteLine(System.Windows.Forms.Keys.J.GetHashCode());
+            LocalPInvoke.RegisterHotKey(handle, 9000, 0x8, 0x71);
             Visibility = Visibility.Hidden;
             Opacity = 1;
+            TrayIconCheck(isForceReset: true);
         }
 
         private void splitHelpButton_Click(object sender, RoutedEventArgs e)
