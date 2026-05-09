@@ -35,10 +35,8 @@ jobs:
       - name: Restore
         run: dotnet restore RoundedTB/RoundedTB.csproj
 
-      - name: Build (CI check)
+      - name: Build
         run: dotnet build RoundedTB/RoundedTB.csproj -c Release --no-restore
-
-      # ── Release steps — only run on version tags or manual trigger ──────────
 
       - name: Resolve release tag
         if: startsWith(github.ref, 'refs/tags/v') || inputs.create_release == 'true'
