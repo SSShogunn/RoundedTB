@@ -2,10 +2,7 @@ name: CI / Release
 
 on:
   push:
-    branches: [ master ]
     tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ master ]
   workflow_dispatch:
     inputs:
       create_release:
