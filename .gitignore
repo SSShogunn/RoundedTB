@@ -366,3 +366,7 @@ FodyWeavers.xsd
 # Editor & tool folders
 .vscode/
 .claude/
+
+# Installer build output
+installer-output/
+publish/
