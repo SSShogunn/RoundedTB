@@ -155,20 +155,29 @@ namespace RoundedTB
         public enum DWMWINDOWATTRIBUTE : uint
         {
             NCRenderingEnabled = 1,
-            NCRenderingPolicy,
-            TransitionsForceDisabled,
-            AllowNCPaint,
-            CaptionButtonBounds,
-            NonClientRtlLayout,
-            ForceIconicRepresentation,
-            Flip3DPolicy,
-            ExtendedFrameBounds,
-            HasIconicBitmap,
-            DisallowPeek,
-            ExcludedFromPeek,
-            Cloak,
-            Cloaked,
-            FreezeRepresentation
+            NCRenderingPolicy = 2,
+            TransitionsForceDisabled = 3,
+            AllowNCPaint = 4,
+            CaptionButtonBounds = 5,
+            NonClientRtlLayout = 6,
+            ForceIconicRepresentation = 7,
+            Flip3DPolicy = 8,
+            ExtendedFrameBounds = 9,
+            HasIconicBitmap = 10,
+            DisallowPeek = 11,
+            ExcludedFromPeek = 12,
+            Cloak = 13,
+            Cloaked = 14,
+            FreezeRepresentation = 15,
+            PassiveUpdateMode = 16,
+            UseHostBackdropBrush = 17,
+            UseImmersiveDarkMode = 20,
+            WindowCornerPreference = 33,
+            BorderColor = 34,
+            CaptionColor = 35,
+            TextColor = 36,
+            VisibleFrameBorderThickness = 37,
+            SystemBackdropType = 38,
         }
 
         public enum ShowState : int
@@ -506,6 +515,44 @@ namespace RoundedTB
 
 
 
+
+        // Shell shortcut creation (replaces IWshRuntimeLibrary COM reference)
+        [ComImport, Guid("00021401-0000-0000-C000-000000000046")]
+        public class ShellLink { }
+
+        [ComImport, Guid("000214F9-0000-0000-C000-000000000046"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        public interface IShellLinkW
+        {
+            void GetPath([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile, int cchMaxPath, IntPtr pfd, int fFlags);
+            void GetIDList(out IntPtr ppidl);
+            void SetIDList(IntPtr pidl);
+            void GetDescription([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszName, int cchMaxName);
+            void SetDescription([MarshalAs(UnmanagedType.LPWStr)] string pszName);
+            void GetWorkingDirectory([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszDir, int cchMaxPath);
+            void SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string pszDir);
+            void GetArguments([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszArgs, int cchMaxPath);
+            void SetArguments([MarshalAs(UnmanagedType.LPWStr)] string pszArgs);
+            void GetHotkey(out short pwHotkey);
+            void SetHotkey(short wHotkey);
+            void GetShowCmd(out int piShowCmd);
+            void SetShowCmd(int iShowCmd);
+            void GetIconLocation([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszIconPath, int cchIconPath, out int piIcon);
+            void SetIconLocation([MarshalAs(UnmanagedType.LPWStr)] string pszIconPath, int iIcon);
+            void SetRelativePath([MarshalAs(UnmanagedType.LPWStr)] string pszPathRel, int dwReserved);
+            void Resolve(IntPtr hwnd, int fFlags);
+            void SetPath([MarshalAs(UnmanagedType.LPWStr)] string pszFile);
+        }
+
+        [ComImport, Guid("0000010B-0000-0000-C000-000000000046"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        public interface IPersistFile
+        {
+            void GetClassID(out Guid pClassID);
+            [PreserveSig] int IsDirty();
+            void Load([MarshalAs(UnmanagedType.LPWStr)] string pszFileName, uint dwMode);
+            void Save([MarshalAs(UnmanagedType.LPWStr)] string? pszFileName, [MarshalAs(UnmanagedType.Bool)] bool fRemember);
+            void SaveCompleted([MarshalAs(UnmanagedType.LPWStr)] string pszFileName);
+            void GetCurFile([MarshalAs(UnmanagedType.LPWStr)] out string ppszFileName);
+        }
 
         // mystery
         [DllImport("user32.dll")]

@@ -13,7 +13,6 @@ namespace RoundedTB
     public class Interaction
     {
         public MainWindow mw;
-        string m = "";
 
         public Interaction()
         {
@@ -51,7 +50,6 @@ namespace RoundedTB
 
         public void WriteJSON()
         {
-            File.Create(mw.configPath).Close();
             File.WriteAllText(mw.configPath, JsonConvert.SerializeObject(mw.activeSettings, Formatting.Indented));
         }
 

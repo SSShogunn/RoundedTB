@@ -64,19 +64,40 @@ namespace RoundedTB
                 {
                     return null;
                 }
+
+                // Try the known InputSite child first (22H2–24H2). Fall back to the bridge
+                // window itself if the class name changed in a future Windows release.
                 IntPtr hwndWindowCls = LocalPInvoke.FindWindowExA(hwndDesktopXamlSrc, IntPtr.Zero, "Windows.UI.Input.InputSite.WindowClass", null);
-                if (hwndWindowCls == IntPtr.Zero)
+                IntPtr hwndToQuery = hwndWindowCls != IntPtr.Zero ? hwndWindowCls : hwndDesktopXamlSrc;
+
+                IUIAutomationElement? rootEle = null;
+                IUIAutomationCondition? con = null;
+                try
+                {
+                    rootEle = uia.ElementFromHandle(hwndToQuery);
+                    con = uia.CreatePropertyCondition(UIA_PropertyIds.UIA_AutomationIdPropertyId, "TaskbarFrame");
+
+                    // Try direct children first (faster), then fall back to full subtree search
+                    // so the code keeps working if Microsoft nests the element deeper in future builds.
+                    IUIAutomationElement? taskFrameEle =
+                        rootEle.FindFirst(Interop.UIAutomationClient.TreeScope.TreeScope_Children, con)
+                        ?? rootEle.FindFirst(Interop.UIAutomationClient.TreeScope.TreeScope_Subtree, con);
+
+                    if (taskFrameEle != null)
+                    {
+                        AppListXaml.appListXamlAlreadyExists = true;
+                    }
+                    return taskFrameEle;
+                }
+                catch
                 {
                     return null;
                 }
-                IUIAutomationElement taskEle = uia.ElementFromHandle(hwndWindowCls);
-                IUIAutomationCondition con = uia.CreatePropertyCondition(UIA_PropertyIds.UIA_AutomationIdPropertyId, "TaskbarFrame");
-                IUIAutomationElement taskFrameEle = taskEle.FindFirst(Interop.UIAutomationClient.TreeScope.TreeScope_Children, con);
-
-                Marshal.ReleaseComObject(con);
-                Marshal.ReleaseComObject(taskEle);
-                AppListXaml.appListXamlAlreadyExists = true;
-                return taskFrameEle;
+                finally
+                {
+                    if (con != null) Marshal.ReleaseComObject(con);
+                    if (rootEle != null) Marshal.ReleaseComObject(rootEle);
+                }
             }
 
 

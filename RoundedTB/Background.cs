@@ -78,7 +78,7 @@ namespace RoundedTB
                             ReloadChecker checker = new();
                             mw.taskbarDetails?.ForEach(taskbar =>
                             {
-                                if (taskbar.AppListXaml.ReloadRequired)
+                                if (taskbar.AppListXaml?.ReloadRequired == true)
                                 {
                                     taskbar.AppListXaml.ReloadTaskbarFrameElement();
                                     checker.IsReload = true;
@@ -87,12 +87,11 @@ namespace RoundedTB
                             // Update tray icon
                             mw.interaction.RefreshUiTray(isForceReset: checker.IsReload);
 
+                            // Registry read — only needed when the user manually changes alignment, once/sec is plenty
+                            mw.activeSettings.IsCentred = Taskbar.CheckIfCentred();
+
                             infrequentCount = 0;
                         }
-
-                        // Check if the taskbar is centred, and if it is, directly update the settings; using an interim bool to avoid delaying because I'm lazy
-                        bool isCentred = Taskbar.CheckIfCentred();
-                        mw.activeSettings.IsCentred = isCentred;
 
                         // Work with static values to avoid some null reference exceptions
                         List<Types.Taskbar> taskbars = mw.taskbarDetails;
@@ -293,8 +292,8 @@ namespace RoundedTB
                 catch (TypeInitializationException ex)
                 {
                     mw.interaction.AddLog(ex.Message);
-                    mw.interaction.AddLog(ex.InnerException.Message);
-                    throw ex;
+                    mw.interaction.AddLog(ex.InnerException?.Message ?? "");
+                    throw;
                 }
             }
         }

@@ -1,5 +1,4 @@
-﻿using IWshRuntimeLibrary;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -105,18 +104,20 @@ namespace RoundedTB
 
 
             // Check OS build, as behaviours rather-annoyingly differ between Windows 11 and Windows 10
-            RegistryKey registryKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-            var buildNumber = registryKey.GetValue("CurrentBuild").ToString();
-            if (Convert.ToInt32(buildNumber) >= 21996)
+            using (RegistryKey registryKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
             {
-                isWindows11 = true;
-            }
-            else
-            {
-                isWindows11 = false;
-                activeSettings.IsWindows11 = false;
-                dynamicCheckBox.Content = "Split mode";
-                fillAltTabCheckBox.Content = "[Unavailable]";
+                var buildNumber = registryKey?.GetValue("CurrentBuild")?.ToString();
+                if (Convert.ToInt32(buildNumber) >= 21996)
+                {
+                    isWindows11 = true;
+                }
+                else
+                {
+                    isWindows11 = false;
+                    activeSettings.IsWindows11 = false;
+                    dynamicCheckBox.Content = "Split mode";
+                    fillAltTabCheckBox.Content = "[Unavailable]";
+                }
             }
 
             // Initialise functions
@@ -721,14 +722,16 @@ namespace RoundedTB
                 {
                     Directory.CreateDirectory(shortcutFolder);
                 }
-                WshShell shellClass = new WshShell();
                 string rtbStartupLink = Path.Combine(shortcutFolder, "RoundedTB.lnk");
-                IWshShortcut shortcut = (IWshShortcut)shellClass.CreateShortcut(rtbStartupLink);
-                shortcut.TargetPath = Environment.GetCommandLineArgs()[0];
-                shortcut.IconLocation = Environment.GetCommandLineArgs()[0];
-                shortcut.Arguments = "";
-                shortcut.Description = "Start RoundedTB";
-                shortcut.Save();
+                var shellLink = (LocalPInvoke.IShellLinkW)new LocalPInvoke.ShellLink();
+                shellLink.SetPath(Environment.GetCommandLineArgs()[0]);
+                shellLink.SetArguments("");
+                shellLink.SetDescription("Start RoundedTB");
+                shellLink.SetIconLocation(Environment.GetCommandLineArgs()[0], 0);
+                var persistFile = (LocalPInvoke.IPersistFile)shellLink;
+                persistFile.Save(rtbStartupLink, false);
+                Marshal.ReleaseComObject(persistFile);
+                Marshal.ReleaseComObject(shellLink);
             }
             catch (Exception)
             {
