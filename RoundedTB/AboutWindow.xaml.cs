@@ -33,17 +33,17 @@ namespace RoundedTB
         }
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(e.Uri.ToString());
+            Process.Start(new ProcessStartInfo(e.Uri.ToString()) { UseShellExecute = true });
         }
 
         private void configButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(((MainWindow)Application.Current.MainWindow).configPath);
+            Process.Start(new ProcessStartInfo(((MainWindow)Application.Current.MainWindow).configPath) { UseShellExecute = true });
         }
 
         private void logButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(((MainWindow)Application.Current.MainWindow).logPath);
+            Process.Start(new ProcessStartInfo(((MainWindow)Application.Current.MainWindow).logPath) { UseShellExecute = true });
         }
     }
 }
