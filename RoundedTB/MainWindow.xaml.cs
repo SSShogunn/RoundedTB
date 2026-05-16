@@ -470,27 +470,8 @@ namespace RoundedTB
 
         public void TrayIconCheck(bool isForceReset)
         {
-            Uri resLight = new("pack://application:,,,/res/traylight.ico");
-            Uri resDark = new("pack://application:,,,/res/traydark.ico");
-
-            if (false)
-            {
-                // TODO: Show system theme mode icon.
-                bool cuurentIsLightMode = IsThemeLightMode();
-                if (cuurentIsLightMode)
-                {
-                    mainTitleBar.NotifyIconImage = System.Windows.Media.Imaging.BitmapFrame.Create(
-                        new System.Windows.Media.Imaging.BitmapImage(resLight));
-                }
-                else
-                {
-                    mainTitleBar.NotifyIconImage = System.Windows.Media.Imaging.BitmapFrame.Create(
-                        new System.Windows.Media.Imaging.BitmapImage(resDark));
-                }
-            }
             if (isForceReset)
             {
-
                 mainTitleBar.ResetIcon();
             }
         }

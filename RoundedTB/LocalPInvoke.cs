@@ -549,7 +549,7 @@ namespace RoundedTB
             void GetClassID(out Guid pClassID);
             [PreserveSig] int IsDirty();
             void Load([MarshalAs(UnmanagedType.LPWStr)] string pszFileName, uint dwMode);
-            void Save([MarshalAs(UnmanagedType.LPWStr)] string? pszFileName, [MarshalAs(UnmanagedType.Bool)] bool fRemember);
+            void Save([MarshalAs(UnmanagedType.LPWStr)] string pszFileName, [MarshalAs(UnmanagedType.Bool)] bool fRemember);
             void SaveCompleted([MarshalAs(UnmanagedType.LPWStr)] string pszFileName);
             void GetCurFile([MarshalAs(UnmanagedType.LPWStr)] out string ppszFileName);
         }

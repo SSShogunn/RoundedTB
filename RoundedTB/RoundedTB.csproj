@@ -6,7 +6,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
@@ -21,15 +21,15 @@
     <OutputPath>Z:\RTBDebug\bin\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DesktopBridge.Helpers" Version="1.2.1" />
+    <PackageReference Include="DesktopBridge.Helpers" Version="1.2.2" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="Interop.UIAutomationClient" Version="10.19041.0" />
     <PackageReference Include="Interop.UIAutomationCore" Version="10.19041.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="PInvoke.User32" Version="0.7.104" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="PInvoke.User32" Version="0.7.124" />
     <PackageReference Include="WPF-UI" Version="1.2.1" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="9.0.5" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="RoundedTB.ico" />
@@ -38,9 +38,7 @@
     <Resource Include="res\TrayDark.ico" />
     <Resource Include="res\TrayLight.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="RoundedTB.ico" />
-  </ItemGroup>
+
   <ItemGroup>
     <Resource Include="RoundedTBDev.ico" />
   </ItemGroup>
