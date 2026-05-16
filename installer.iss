@@ -15,6 +15,8 @@ AppUpdatesURL={#AppURL}/releases
 DefaultDirName={autopf}\{#AppName}
 PrivilegesRequired=admin
 DisableProgramGroupPage=yes
+DisableReadyPage=yes
+UsePreviousTasks=yes
 OutputDir=installer-output
 OutputBaseFilename=RoundedTB-{#AppVersion}-Setup
 SetupIconFile=RoundedTB\RoundedTB.ico
@@ -33,7 +35,7 @@ Name: "desktopicon"; Description: "Create a &desktop shortcut"; GroupDescription
 Name: "startup"; Description: "Start {#AppName} automatically when &Windows starts"; GroupDescription: "Startup:"
 
 [Files]
-Source: "publish\{#AppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppExeName}"

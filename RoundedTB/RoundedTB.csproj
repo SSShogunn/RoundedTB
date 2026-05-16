@@ -38,9 +38,7 @@
     <Resource Include="res\TrayDark.ico" />
     <Resource Include="res\TrayLight.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="RoundedTB.ico" />
-  </ItemGroup>
+
   <ItemGroup>
     <Resource Include="RoundedTBDev.ico" />
   </ItemGroup>

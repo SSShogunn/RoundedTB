@@ -28,14 +28,21 @@ namespace RoundedTB
 
         public Types.Settings ReadJSON()
         {
-            string jsonSettings = File.ReadAllText(mw.configPath);
-            Types.Settings settings = JsonConvert.DeserializeObject<Types.Settings>(jsonSettings);
-            // compatible old settings 
-            if (settings.DynamicSecondaryClockLayout == null)
+            try
             {
-                settings.DynamicSecondaryClockLayout = new Types.SegmentSettings { CornerRadius = 7, MarginLeft = 3, MarginTop = 3, MarginRight = 3, MarginBottom = 3 };
+                string jsonSettings = File.ReadAllText(mw.configPath);
+                Types.Settings settings = JsonConvert.DeserializeObject<Types.Settings>(jsonSettings);
+                if (settings == null) return null;
+                if (settings.DynamicSecondaryClockLayout == null)
+                {
+                    settings.DynamicSecondaryClockLayout = new Types.SegmentSettings { CornerRadius = 7, MarginLeft = 3, MarginTop = 3, MarginRight = 3, MarginBottom = 3 };
+                }
+                return settings;
             }
-            return settings;
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public bool IsWindows11()
