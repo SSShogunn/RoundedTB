@@ -58,6 +58,33 @@ Filename: "taskkill.exe"; Parameters: "/F /IM {#AppExeName}"; \
   Flags: runhidden; RunOnceId: "KillApp"
 
 [Code]
+function NetDesktop9Installed(): Boolean;
+var
+  FindRec: TFindRec;
+begin
+  Result := False;
+  if FindFirst(ExpandConstant('{commonpf64}') + '\dotnet\shared\Microsoft.WindowsDesktop.App\9.*', FindRec) then
+  begin
+    Result := True;
+    FindClose(FindRec);
+  end;
+end;
+
+function InitializeSetup(): Boolean;
+begin
+  Result := True;
+  if not NetDesktop9Installed() then
+  begin
+    MsgBox(
+      '.NET 9 Windows Desktop Runtime is required to run RoundedTB.' + #13#10#13#10 +
+      'Please install it from:' + #13#10 +
+      'https://dotnet.microsoft.com/en-us/download/dotnet/9.0' + #13#10#13#10 +
+      'Download the ".NET Desktop Runtime 9.x" x64 installer, run it, then re-run this setup.',
+      mbError, MB_OK);
+    Result := False;
+  end;
+end;
+
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   ResultCode: Integer;
