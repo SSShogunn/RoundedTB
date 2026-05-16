@@ -54,3 +54,12 @@ Filename: "{app}\{#AppExeName}"; \
 [UninstallRun]
 Filename: "taskkill.exe"; Parameters: "/F /IM {#AppExeName}"; \
   Flags: runhidden; RunOnceId: "KillApp"
+
+[Code]
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  ResultCode: Integer;
+begin
+  if CurStep = ssInstall then
+    Exec(ExpandConstant('{sys}\taskkill.exe'), '/F /IM {#AppExeName}', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+end;

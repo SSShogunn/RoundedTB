@@ -651,6 +651,7 @@ namespace RoundedTB
                 {
                     interaction.AddLog($"Taskbar structure changed on exit:\n{aaaa.Message}");
                 }
+                Microsoft.Win32.SystemEvents.DisplaySettingsChanged -= OnDisplaySettingsChanged;
                 interaction.AddLog("Exiting RoundedTB.");
             }
             if (!isAlreadyRunning)
@@ -951,6 +952,16 @@ namespace RoundedTB
             Visibility = Visibility.Hidden;
             Opacity = 1;
             TrayIconCheck(isForceReset: true);
+            Microsoft.Win32.SystemEvents.DisplaySettingsChanged += OnDisplaySettingsChanged;
+        }
+
+        private void OnDisplaySettingsChanged(object sender, EventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                taskbarDetails = Taskbar.GenerateTaskbarInfo(isWindows11);
+                ApplyButton_Click(null, null);
+            });
         }
 
         private void splitHelpButton_Click(object sender, RoutedEventArgs e)

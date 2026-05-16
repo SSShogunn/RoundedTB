@@ -32,16 +32,10 @@ namespace RoundedTB
                 {
                     if (key != null)
                     {
-                        int val = (int)key.GetValue("TaskbarAl");
-
-                        if (val == 1)
-                        {
-                            retVal = true;
-                        }
-                        else
-                        {
-                            retVal = false;
-                        }
+                        // Value absent means never changed — Windows 11 default is centered (1)
+                        object raw = key.GetValue("TaskbarAl");
+                        int val = raw != null ? (int)raw : 1;
+                        retVal = val == 1;
                     }
                     else
                     {
