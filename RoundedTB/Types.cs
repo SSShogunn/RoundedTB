@@ -43,6 +43,7 @@ namespace RoundedTB
         {
             private IUIAutomationElement? _taskbarFrame;
             private IUIAutomation? _uia;
+            private IUIAutomationCondition? _trueCondition;
             private readonly IntPtr _hwndTaskbarMain;
 
             // singleton checker
@@ -54,6 +55,7 @@ namespace RoundedTB
             {
                 this._hwndTaskbarMain = hwndTaskbarMain;
                 this._uia = new CUIAutomation();
+                _trueCondition = _uia.CreateTrueCondition();
                 _taskbarFrame = GetTaskbarFrameElement(this._hwndTaskbarMain, this._uia);
             }
 
@@ -129,7 +131,7 @@ namespace RoundedTB
                 {
                     children = _taskbarFrame.FindAll(
                         Interop.UIAutomationClient.TreeScope.TreeScope_Children,
-                        _uia.CreateTrueCondition());
+                        _trueCondition);
                     tagRECT? leftRect = null;
                     tagRECT? rightRect = null;
                     int len = children.Length;
@@ -192,6 +194,11 @@ namespace RoundedTB
                 {
                     Marshal.ReleaseComObject(_taskbarFrame);
                     _taskbarFrame = null;
+                }
+                if (_trueCondition != null)
+                {
+                    Marshal.ReleaseComObject(_trueCondition);
+                    _trueCondition = null;
                 }
                 if (_uia != null)
                 {

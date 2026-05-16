@@ -376,40 +376,9 @@ namespace RoundedTB
         /// </returns>
         public static bool TaskbarCountOrHandleChanged(int taskbarCount, IntPtr mainTaskbarHandle)
         {
-            List<IntPtr> currentTaskbars = new List<IntPtr>();
-            bool otherTaskbarsExist = true;
-            IntPtr hwndPrevious = IntPtr.Zero;
-            currentTaskbars.Add(LocalPInvoke.FindWindowExA(IntPtr.Zero, hwndPrevious, "Shell_TrayWnd", null));
-
-            if (currentTaskbars[0] == IntPtr.Zero)
-            {
-                return false;
-            }
-
-            if (currentTaskbars[0] != mainTaskbarHandle)
-            {
-                return true;
-            }
-
-            while (otherTaskbarsExist)
-            {
-                IntPtr hwndCurrent = LocalPInvoke.FindWindowExA(IntPtr.Zero, hwndPrevious, "Shell_SecondaryTrayWnd", null);
-                hwndPrevious = hwndCurrent;
-
-                if (hwndCurrent == IntPtr.Zero)
-                {
-                    otherTaskbarsExist = false;
-                }
-                else
-                {
-                    currentTaskbars.Add(hwndCurrent);
-                }
-            }
-            if (currentTaskbars.Count != taskbarCount)
-            {
-                return true;
-            }
-            return false;
+            IntPtr currentMain = LocalPInvoke.FindWindowExA(IntPtr.Zero, IntPtr.Zero, "Shell_TrayWnd", null);
+            if (currentMain == IntPtr.Zero) return false;
+            return currentMain != mainTaskbarHandle;
         }
 
         /// <summary>
@@ -513,6 +482,8 @@ namespace RoundedTB
 
 
 
+
+            return retVal;
 
             bool i = true;
             IntPtr hwndPrevious = IntPtr.Zero;

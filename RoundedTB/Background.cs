@@ -90,22 +90,22 @@ namespace RoundedTB
                             // Registry read — only needed when the user manually changes alignment, once/sec is plenty
                             mw.activeSettings.IsCentred = Taskbar.CheckIfCentred();
 
+                            // Handle check moved here from per-frame: primary taskbar restarts are rare
+                            List<Types.Taskbar> infreqTaskbars = mw.taskbarDetails;
+                            if (Taskbar.TaskbarCountOrHandleChanged(infreqTaskbars.Count, infreqTaskbars[0].TaskbarHwnd))
+                            {
+                                infreqTaskbars.ForEach(t => t.Dispose());
+                                mw.taskbarDetails = Taskbar.GenerateTaskbarInfo(mw.interaction.IsWindows11());
+                                mw.interaction.RefreshUiTray(isForceReset: true);
+                                Debug.WriteLine("Regenerating taskbar info (infrequent check)");
+                            }
+
                             infrequentCount = 0;
                         }
 
                         // Work with static values to avoid some null reference exceptions
                         List<Types.Taskbar> taskbars = mw.taskbarDetails;
                         Types.Settings settings = mw.activeSettings;
-
-                        // If the number of taskbars has changed, regenerate taskbar information
-                        if (Taskbar.TaskbarCountOrHandleChanged(taskbars.Count, taskbars[0].TaskbarHwnd))
-                        {
-                            // Forcefully reset taskbars if the taskbar count or main taskbar handle has changed
-                            taskbars.ForEach(t => t.Dispose());
-                            taskbars = Taskbar.GenerateTaskbarInfo(mw.interaction.IsWindows11());
-                            mw.interaction.RefreshUiTray(isForceReset: true);
-                            Debug.WriteLine("Regenerating taskbar info");
-                        }
 
                         for (int current = 0; current < taskbars.Count; current++)
                         {
@@ -228,8 +228,10 @@ namespace RoundedTB
                                     Debug.WriteLine("MouseOff TB");
                                 }
                             }
-                            else
+                            else if (taskbars[current].TaskbarHidden)
                             {
+                                // Only run when we know the taskbar might not be at full opacity
+                                // (e.g. auto-hide was just turned off while the taskbar was hidden)
                                 int animSpeed = 15;
                                 byte taskbarOpacity = 0;
                                 LocalPInvoke.GetLayeredWindowAttributes(taskbars[current].TaskbarHwnd, out _, out taskbarOpacity, out _);
@@ -248,8 +250,8 @@ namespace RoundedTB
                                     System.Threading.Thread.Sleep(animSpeed);
                                     LocalPInvoke.SetLayeredWindowAttributes(taskbars[current].TaskbarHwnd, 0, 255, LocalPInvoke.LWA_ALPHA);
                                     taskbars[current].Ignored = true;
-                                    taskbars[current].TaskbarHidden = false;
                                 }
+                                taskbars[current].TaskbarHidden = false;
                             }
 
 

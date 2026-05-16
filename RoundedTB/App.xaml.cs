@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 
 namespace RoundedTB
 {
@@ -6,6 +7,9 @@ namespace RoundedTB
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+#if DEBUG
+            Trace.Listeners.Add(new ConsoleTraceListener());
+#endif
             base.OnStartup(e);
             WPFUI.Theme.Watcher.Start();
         }
