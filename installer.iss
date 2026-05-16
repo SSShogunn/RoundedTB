@@ -58,36 +58,6 @@ Filename: "taskkill.exe"; Parameters: "/F /IM {#AppExeName}"; \
   Flags: runhidden; RunOnceId: "KillApp"
 
 [Code]
-function NetDesktop9Installed(): Boolean;
-var
-  FindRec: TFindRec;
-  BasePath: string;
-begin
-  Result := False;
-  BasePath := ExpandConstant('{commonpf64}') + '\dotnet\shared\Microsoft.WindowsDesktop.App';
-  if FindFirst(BasePath + '\9.*', FindRec) then
-  begin
-    Result := True;
-    FindClose(FindRec);
-  end;
-end;
-
-function InitializeSetup(): Boolean;
-begin
-  Result := True;
-  if not NetDesktop9Installed() then
-  begin
-    MsgBox(
-      '.NET 9 Windows Desktop Runtime is required but was not found.' + #13#10#13#10 +
-      'Please download and install it from:' + #13#10 +
-      'https://dotnet.microsoft.com/en-us/download/dotnet/9.0' + #13#10#13#10 +
-      'Choose "Download x64" under ".NET Desktop Runtime 9.x".' + #13#10 +
-      'Then run this installer again.',
-      mbError, MB_OK);
-    Result := False;
-  end;
-end;
-
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   ResultCode: Integer;
